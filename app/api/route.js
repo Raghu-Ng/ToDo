@@ -37,11 +37,24 @@ export async function DELETE(request) {
     const mongoId = request.nextUrl.searchParams.get('mongoId');
   
     try {
-      // Assuming TodoModel is a Mongoose model
       await TodoModel.findByIdAndDelete(mongoId);
       return NextResponse.json({ msg: 'Todo Deleted' });
     } catch (error) {
       console.error(error);
       return NextResponse.error({ msg: 'Failed to delete todo' });
+    }
+  }
+
+  export async function PUT(request) {
+    const mongoId = request.nextUrl.searchParams.get('mongoId');
+  
+    try {
+      await TodoModel.findByIdAndUpdate(mongoId, {
+        $set:{isCompleted:true}
+      });
+      return NextResponse.json({ msg: 'Todo Updated ' });
+    } catch (error) {
+      console.error(error);
+      return NextResponse.error({ msg: 'Failed to update todo' });
     }
   }

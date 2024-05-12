@@ -29,6 +29,16 @@ export default function Home() {
     fetchTodos();
   }
 
+  const updateTodo = async (id) => {
+    const response = await axios.put('/api',{},{
+      params:{
+        mongoId:id
+      }
+    })
+    toast.success(response.data.msg);
+    await fetchTodos();
+  }
+
   useEffect(()=>{
     fetchTodos();
   },[])
@@ -90,7 +100,7 @@ export default function Home() {
           <tbody>
 
           {todoData.map((item,index)=>{
-            return <TodoList key={index} id={index} title={item.title} discription={item.discription} complete={item.completed} mongoId={item._id} deleteTodo={deleteTodo} />
+            return <TodoList key={index} id={index} title={item.title} discription={item.discription} complete={item.isCompleted} mongoId={item._id} deleteTodo={deleteTodo} updateTodo={updateTodo} />
           })}
 
           </tbody>

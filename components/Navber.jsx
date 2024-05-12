@@ -6,9 +6,9 @@ const Navber = () => {
         <h1 className="text-lg font-semiboald">Todo-App</h1>
         <ul className='flex gap-[40px] font-m'>
             <li>Home</li>
-            <li>Products</li>
+        {/* <li>Products</li>
             <li>About</li>
-            <li>Contact us</li>
+            <li>Contact us</li> */}
         </ul>
         </div>
   )
