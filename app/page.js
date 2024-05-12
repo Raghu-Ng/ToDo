@@ -1,15 +1,27 @@
 "use client"
 import TodoList from "@/components/TodoList";
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
 
   const [formData,setFormData]=useState({
-    Title:"",
-    Discription:"",
+    title:"",
+    discription:"",
   });
+
+  const [todoData, setTodoData]=useState([]);
+
+  const fetchTodos = async () => {
+    const response = await axios('/api');
+    setTodoData(response.data.todos)
+  }
+
+  useEffect(()=>{
+    fetchTodos();
+  },[])
 
   const onChangeHandler=(e)=> {
     const name = e.target.name;
@@ -22,9 +34,13 @@ export default function Home() {
     e.preventDefault();
     try {
       // api code
-      
-
-      toast.success("success")
+      const response = await axios.post('/api',formData);
+      toast.success(response.data.msg);
+      setFormData({
+        title:"",
+        discription:"",
+      });
+      await fetchTodos();
     } catch (error) {
       toast.error("Error")
       
@@ -36,8 +52,8 @@ export default function Home() {
     <>
       <ToastContainer theme="dark"/>
       <form onSubmit={onSubmitHandler} className="flex item-start flex-col gap-2 w-[80%] max-w-[600px] mt-24 px-2 mx-auto">
-        <input value={formData.Title} onChange={onChangeHandler} type="text" name="Title" placeholder="Enter the Title" className="px-3 py-2 border-2 w-full" />
-        <textarea value={formData.Discription} onChange={onChangeHandler} name="Discription" placeholder="Enter the Discription" className="px-3 py-2 border-2 w-full"></textarea>
+        <input value={formData.title} onChange={onChangeHandler} type="text" name="title" placeholder="Enter the Title" className="px-3 py-2 border-2 w-full" />
+        <textarea value={formData.discription} onChange={onChangeHandler} name="discription" placeholder="Enter the Discription" className="px-3 py-2 border-2 w-full"></textarea>
         <button type="submit" className="bg-orange-600 py-3 px-11 text-white">Add Todo</button>
       </form>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-24 w-[60%] mx-auto">
@@ -63,9 +79,9 @@ export default function Home() {
           </thead>
           <tbody>
 
-            <TodoList/>
-            <TodoList/>
-            <TodoList/>
+          {todoData.map((item,index)=>{
+            return <TodoList key={index} id={index} title={item.title} discription={item.discription} complete={item.completed} mongoId={item._id}  />
+          })}
 
           </tbody>
         </table>
