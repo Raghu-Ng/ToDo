@@ -19,6 +19,16 @@ export default function Home() {
     setTodoData(response.data.todos)
   }
 
+  const deleteTodo = async (id) => {
+    const response = await axios.delete('/api',{
+      params:{
+        mongoId:id
+      }
+    })
+    toast.success(response.data.msg);
+    fetchTodos();
+  }
+
   useEffect(()=>{
     fetchTodos();
   },[])
@@ -80,7 +90,7 @@ export default function Home() {
           <tbody>
 
           {todoData.map((item,index)=>{
-            return <TodoList key={index} id={index} title={item.title} discription={item.discription} complete={item.completed} mongoId={item._id}  />
+            return <TodoList key={index} id={index} title={item.title} discription={item.discription} complete={item.completed} mongoId={item._id} deleteTodo={deleteTodo} />
           })}
 
           </tbody>
